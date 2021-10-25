@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Configuration;
 
 namespace RFMonitor
 {
@@ -18,8 +15,9 @@ namespace RFMonitor
         public SerialPortMonitor()
         {
             readThread = new Thread(ReadCom);
+            string selectedCom = ConfigurationManager.AppSettings["SelectedCom"];
 
-            _readPort = new SerialPort("COM5", 19200, Parity.None, 8, StopBits.One);
+            _readPort = new SerialPort(selectedCom, 19200, Parity.None, 8, StopBits.One);
 
             Debug.WriteLine("Opening port...");
             _readPort.Open();

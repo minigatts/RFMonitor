@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Diagnostics;
 using System.IO;
 
@@ -13,6 +8,7 @@ namespace RFMonitor
     class Variables
     {
         #region Data Variables
+        static string[] _ports;
         static DateTime _currentTime;
         static DateTime _lastGoodTime;
         static float _currentDepth;
@@ -35,9 +31,7 @@ namespace RFMonitor
         {
             get { return _currentDepth; }
             set { _currentDepth = value; }
-        }
-
-       
+        }       
 
         public static float MaxDepth
         {
@@ -55,6 +49,11 @@ namespace RFMonitor
         {
             get { return _runningFootage; }
             set { _runningFootage = value; }
+        }
+        public static string[] Ports
+        {
+            get { return _ports; }
+            set { _ports = value; }
         }
         #endregion
 
@@ -97,6 +96,17 @@ namespace RFMonitor
             {
                 Debug.WriteLine("No status file found.");
             }
+        }
+
+        public static void ClearData()
+        {
+            LastGoodTime = DateTime.Now;
+            CurrentDepth = 0;
+            MaxDepth = 0;
+            LastGoodDepth = 0;
+            RunningFootage = 0;
+
+            SaveData();
         }
         #endregion
     }

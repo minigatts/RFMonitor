@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Timers;
-using System.Diagnostics;
+using System.IO.Ports;
+using System.Configuration;
 
 namespace RFMonitor
 {
@@ -24,10 +18,18 @@ namespace RFMonitor
             uiUpdateTimer.AutoReset = true;
             uiUpdateTimer.Enabled = true;
 
+            // Get a list of available serial port names.
+            Variables.Ports = SerialPort.GetPortNames();
+
             Variables.ReadData();
 
-            InitializeComponent();    
-        }       
+            InitializeComponent();
+
+            cbPorts.Items.AddRange(Variables.Ports);
+            cbPorts.Text = ConfigurationManager.AppSettings["SelectedCom"];
+            tbDepthColumn.Text = ConfigurationManager.AppSettings["DepthCol"];
+
+        }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -40,6 +42,9 @@ namespace RFMonitor
             InitializeSerialPort();
             btnConnect.Enabled = false;
             btnDisconnect.Enabled = true;
+            tbDepthColumn.Enabled = false;
+            cbPorts.Enabled = false;
+            btnNewJob.Enabled = false;
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
@@ -47,6 +52,9 @@ namespace RFMonitor
             _spMon.Close();
             btnConnect.Enabled = true;
             btnDisconnect.Enabled = false;
+            tbDepthColumn.Enabled = true;
+            cbPorts.Enabled = true;
+            btnNewJob.Enabled = true;
         }
 
         private void InitializeSerialPort()
@@ -57,7 +65,7 @@ namespace RFMonitor
         public void OnTimedUpdate(object source, ElapsedEventArgs e)
         {
             this.Invoke((MethodInvoker)delegate
-           {
+           {               
                this.lblDepth.Text = Variables.CurrentDepth.ToString("0.0");
                this.lblRunningFootage.Text = Variables.RunningFootage.ToString("0.0");
                this.lblMaxDepth.Text = Variables.MaxDepth.ToString("0.0");
@@ -65,5 +73,19 @@ namespace RFMonitor
             
         }
 
+        private void cbPorts_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Program.SetSetting("SelectedCom", this.cbPorts.Text);
+        }
+
+        private void tbDepthColumn_TextChanged(object sender, EventArgs e)
+        {
+            Program.SetSetting("DepthCol", this.tbDepthColumn.Text);
+        }
+
+        private void btnNewJob_Click(object sender, EventArgs e)
+        {
+            Variables.ClearData();
+        }
     }
 }

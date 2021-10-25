@@ -81,6 +81,10 @@ namespace RFMonitor
             {                
                 Debug.WriteLine("Too much data in buffer.");
             }
+            catch (FormatException)
+            {
+                Debug.WriteLine("Index string not in correct format.");
+            }
             
         }
 
