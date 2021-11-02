@@ -20,15 +20,19 @@ namespace RFMonitor
         static float depthDelta;
         static float depth;
         static float speed;
+        static string depthStr;
         
         public static void GetDepth ( string message )
         {            
             // Pull current depth from serial stream.
-            string[] elements = message.Split(',');
+            string[] elements = message.Split(new string[] { "," , "\0\r"}, StringSplitOptions.None);            
 
             try
-            {                
-                depth = float.Parse(elements[depthCol])*Variables.DepthGain+Variables.DepthOffset;
+            {
+                depthStr = elements[depthCol];
+                depthStr = depthStr.TrimStart(new Char[] { '0' });
+                Debug.Write(depthStr);
+                depth = Convert.ToSingle(depthStr)*Variables.DepthGain + Variables.DepthOffset;
 
                 // Mark time of sample.
                 currentTime = DateTime.Now;
