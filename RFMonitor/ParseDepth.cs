@@ -13,8 +13,8 @@ namespace RFMonitor
     {
         // Application constants
         static int depthCol = Convert.ToInt16(ConfigurationManager.AppSettings["DepthCol"]);
-        static int maxSpeed = Convert.ToInt16(ConfigurationManager.AppSettings["MaxSpeed"])/60;
-                
+        static int maxSpeed = Convert.ToInt16(ConfigurationManager.AppSettings["MaxSpeed"])/60;        
+
         static DateTime currentTime;
         static TimeSpan timeDelta;
         static float depthDelta;
@@ -27,8 +27,8 @@ namespace RFMonitor
             string[] elements = message.Split(',');
 
             try
-            {
-                depth = float.Parse(elements[depthCol]);
+            {                
+                depth = float.Parse(elements[depthCol])*Variables.DepthGain+Variables.DepthOffset;
 
                 // Mark time of sample.
                 currentTime = DateTime.Now;

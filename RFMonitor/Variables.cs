@@ -15,6 +15,8 @@ namespace RFMonitor
         static float _maxDepth;
         static float _lastGoodDepth;
         static float _runningFootage;
+        static float _depthGain;
+        static float _depthOffset;
 
         public static DateTime CurrentTime
         {
@@ -54,6 +56,18 @@ namespace RFMonitor
         {
             get { return _ports; }
             set { _ports = value; }
+        }
+
+        public static float DepthGain
+        {
+            get { return _depthGain; }
+            set { _depthGain = value; }
+        }
+
+        public static float DepthOffset
+        {
+            get { return _depthOffset; }
+            set { _depthOffset = value; }
         }
         #endregion
 
