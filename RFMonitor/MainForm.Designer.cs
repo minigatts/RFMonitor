@@ -47,12 +47,19 @@ namespace RFMonitor
             this.tbDepthOffset = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.tbDepthGain = new System.Windows.Forms.TextBox();
+            this.btnForceMon = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbWeightColumn = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tbWeightGain = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.tbWeightOffset = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConnect.Location = new System.Drawing.Point(5, 386);
+            this.btnConnect.Location = new System.Drawing.Point(67, 424);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(97, 38);
             this.btnConnect.TabIndex = 0;
@@ -64,7 +71,7 @@ namespace RFMonitor
             // 
             this.btnDisconnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDisconnect.Enabled = false;
-            this.btnDisconnect.Location = new System.Drawing.Point(118, 386);
+            this.btnDisconnect.Location = new System.Drawing.Point(181, 424);
             this.btnDisconnect.Name = "btnDisconnect";
             this.btnDisconnect.Size = new System.Drawing.Size(97, 38);
             this.btnDisconnect.TabIndex = 1;
@@ -143,7 +150,7 @@ namespace RFMonitor
             this.cbPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPorts.FormattingEnabled = true;
-            this.cbPorts.Location = new System.Drawing.Point(5, 296);
+            this.cbPorts.Location = new System.Drawing.Point(237, 302);
             this.cbPorts.Name = "cbPorts";
             this.cbPorts.Size = new System.Drawing.Size(97, 21);
             this.cbPorts.TabIndex = 17;
@@ -152,7 +159,7 @@ namespace RFMonitor
             // tbDepthColumn
             // 
             this.tbDepthColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbDepthColumn.Location = new System.Drawing.Point(5, 348);
+            this.tbDepthColumn.Location = new System.Drawing.Point(5, 302);
             this.tbDepthColumn.Name = "tbDepthColumn";
             this.tbDepthColumn.Size = new System.Drawing.Size(97, 20);
             this.tbDepthColumn.TabIndex = 18;
@@ -162,7 +169,7 @@ namespace RFMonitor
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(19, 329);
+            this.label4.Location = new System.Drawing.Point(19, 283);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(74, 13);
             this.label4.TabIndex = 19;
@@ -172,7 +179,7 @@ namespace RFMonitor
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 277);
+            this.label5.Location = new System.Drawing.Point(247, 283);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 13);
             this.label5.TabIndex = 20;
@@ -181,7 +188,7 @@ namespace RFMonitor
             // btnNewJob
             // 
             this.btnNewJob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNewJob.Location = new System.Drawing.Point(232, 386);
+            this.btnNewJob.Location = new System.Drawing.Point(234, 334);
             this.btnNewJob.Name = "btnNewJob";
             this.btnNewJob.Size = new System.Drawing.Size(100, 38);
             this.btnNewJob.TabIndex = 21;
@@ -193,7 +200,7 @@ namespace RFMonitor
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(246, 329);
+            this.label6.Location = new System.Drawing.Point(19, 377);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 23;
@@ -202,7 +209,7 @@ namespace RFMonitor
             // tbDepthOffset
             // 
             this.tbDepthOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbDepthOffset.Location = new System.Drawing.Point(232, 348);
+            this.tbDepthOffset.Location = new System.Drawing.Point(5, 392);
             this.tbDepthOffset.Name = "tbDepthOffset";
             this.tbDepthOffset.Size = new System.Drawing.Size(97, 20);
             this.tbDepthOffset.TabIndex = 22;
@@ -212,7 +219,7 @@ namespace RFMonitor
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(252, 277);
+            this.label7.Location = new System.Drawing.Point(25, 325);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 13);
             this.label7.TabIndex = 25;
@@ -221,18 +228,93 @@ namespace RFMonitor
             // tbDepthGain
             // 
             this.tbDepthGain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbDepthGain.Location = new System.Drawing.Point(232, 296);
+            this.tbDepthGain.Location = new System.Drawing.Point(5, 344);
             this.tbDepthGain.Name = "tbDepthGain";
             this.tbDepthGain.Size = new System.Drawing.Size(97, 20);
             this.tbDepthGain.TabIndex = 24;
             this.tbDepthGain.TextChanged += new System.EventHandler(this.tbDepthGain_TextChanged);
+            // 
+            // btnForceMon
+            // 
+            this.btnForceMon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnForceMon.Location = new System.Drawing.Point(237, 384);
+            this.btnForceMon.Name = "btnForceMon";
+            this.btnForceMon.Size = new System.Drawing.Size(97, 34);
+            this.btnForceMon.TabIndex = 26;
+            this.btnForceMon.Text = "Force Monitor";
+            this.btnForceMon.UseVisualStyleBackColor = true;
+            this.btnForceMon.Click += new System.EventHandler(this.btnForceMon_Click);
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(130, 283);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(79, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Weight Column";
+            // 
+            // tbWeightColumn
+            // 
+            this.tbWeightColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tbWeightColumn.Location = new System.Drawing.Point(116, 302);
+            this.tbWeightColumn.Name = "tbWeightColumn";
+            this.tbWeightColumn.Size = new System.Drawing.Size(97, 20);
+            this.tbWeightColumn.TabIndex = 27;
+            this.tbWeightColumn.TextChanged += new System.EventHandler(this.tbWeightColumn_TextChanged);
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(136, 325);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Weight Gain";
+            // 
+            // tbWeightGain
+            // 
+            this.tbWeightGain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tbWeightGain.Location = new System.Drawing.Point(116, 344);
+            this.tbWeightGain.Name = "tbWeightGain";
+            this.tbWeightGain.Size = new System.Drawing.Size(97, 20);
+            this.tbWeightGain.TabIndex = 31;
+            this.tbWeightGain.TextChanged += new System.EventHandler(this.tbWeightGain_TextChanged);
+            // 
+            // label10
+            // 
+            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(130, 376);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 13);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "Weight Offset";
+            // 
+            // tbWeightOffset
+            // 
+            this.tbWeightOffset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tbWeightOffset.Location = new System.Drawing.Point(116, 392);
+            this.tbWeightOffset.Name = "tbWeightOffset";
+            this.tbWeightOffset.Size = new System.Drawing.Size(97, 20);
+            this.tbWeightOffset.TabIndex = 29;
+            this.tbWeightOffset.TextChanged += new System.EventHandler(this.tbWeightOffset_TextChanged);
             // 
             // RFMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(337, 436);
+            this.ClientSize = new System.Drawing.Size(337, 469);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.tbWeightGain);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.tbWeightOffset);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.tbWeightColumn);
+            this.Controls.Add(this.btnForceMon);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.tbDepthGain);
             this.Controls.Add(this.label6);
@@ -278,6 +360,13 @@ namespace RFMonitor
         private System.Windows.Forms.TextBox tbDepthOffset;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tbDepthGain;
+        private System.Windows.Forms.Button btnForceMon;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbWeightColumn;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbWeightGain;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox tbWeightOffset;
     }
 }
 

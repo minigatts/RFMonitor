@@ -4,42 +4,70 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data;
 using System.Diagnostics;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace RFMonitor
 {
-    class ParseDepth
-    {
+    class ParseDepth    {
+        
+
         // Application constants
         static int depthCol = Convert.ToInt16(ConfigurationManager.AppSettings["DepthCol"]);
+        static int weightCol = Convert.ToInt16(ConfigurationManager.AppSettings["WeightCol"]);
         static int maxSpeed = Convert.ToInt16(ConfigurationManager.AppSettings["MaxSpeed"])/60;        
 
         static DateTime currentTime;
         static TimeSpan timeDelta;
         static float depthDelta;
         static float depth;
+        static float weight;
         static float speed;
         static string depthStr;
-        
+        static string weightStr;
+
         public static void GetDepth ( string message )
         {            
             // Pull current depth from serial stream.
-            string[] elements = message.Split(new string[] { "," , "\0\r"}, StringSplitOptions.None);            
+            string[] elements = message.Split(new string[] { "," , "\0\r"}, StringSplitOptions.None);         
 
             try
             {
                 depthStr = elements[depthCol];
                 depthStr = depthStr.TrimStart(new Char[] { '0' });
-                Debug.Write(depthStr);
-                depth = Convert.ToSingle(depthStr)*Variables.DepthGain + Variables.DepthOffset;
+                depthStr = Regex.Replace(depthStr, "[^-.0-9]", "");              
+
+                weightStr = elements[weightCol];
+                weightStr = weightStr.TrimStart(new Char[] { '0' });
+                weightStr = Regex.Replace(weightStr, "[^-.0-9]", "");                
+
+
+                depth = (float) Math.Round(Convert.ToSingle(depthStr) * Variables.DepthGain + Variables.DepthOffset,1);
+                weight = (float) Math.Round(Convert.ToSingle(weightStr) * Variables.WeightGain + Variables.WeightOffset,1);
+
+                try 
+                {
+                    Debug.WriteLine("\nDepth :" + depthStr + "Weight : " + weightStr);
+                    DataRow _forces = Variables.ForcesData.dt.NewRow();
+                    _forces["Depth"] = depth;
+                    _forces["Weight"] = weight;
+                    Variables.ForcesData.dt.Rows.Add(_forces);                    
+
+                }
+                catch (Exception e)
+                { 
+                    Debug.WriteLine("Error in Forces Parsing");
+                    Debug.WriteLine(e);
+                }      
 
                 // Mark time of sample.
                 currentTime = DateTime.Now;
 
                 // Get time since last sample
                 timeDelta = currentTime - Variables.LastGoodTime;
-                Debug.WriteLine("\nCurrent Time : " + currentTime + "  Last Time : " + Variables.LastGoodTime);
+                Debug.WriteLine("Current Time : " + currentTime + "  Last Time : " + Variables.LastGoodTime);
                 Debug.WriteLine("Time Delta : " + timeDelta);
 
                 if (timeDelta.TotalSeconds >= .5)

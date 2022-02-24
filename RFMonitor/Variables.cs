@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Data;
+using System.Windows.Forms;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
 
 namespace RFMonitor
 {
@@ -17,6 +22,10 @@ namespace RFMonitor
         static float _runningFootage;
         static float _depthGain;
         static float _depthOffset;
+        static float _weightGain;
+        static float _weightOffset;
+        static int _depthCol;
+        static int _weightCol;
 
         public static DateTime CurrentTime
         {
@@ -58,16 +67,57 @@ namespace RFMonitor
             set { _ports = value; }
         }
 
+        public static int DepthCol
+        {
+            get { return _depthCol; }
+            set { _depthCol = value; }
+        }
+
         public static float DepthGain
         {
             get { return _depthGain; }
             set { _depthGain = value; }
         }
-
         public static float DepthOffset
         {
             get { return _depthOffset; }
             set { _depthOffset = value; }
+        }
+
+        public static int WeightCol
+        {
+            get { return _weightCol; }
+            set { _weightCol = value; }
+        }
+
+        public static float WeightGain
+        {
+            get { return _weightGain; }
+            set { _weightGain = value; }
+        }
+
+        public static float WeightOffset
+        {
+            get { return _weightOffset; }
+            set { _weightOffset = value; }
+        }
+
+        public static class ForcesData
+        {
+            public static DataTable dt = new DataTable();                     
+            
+        }
+
+        public static class ModelData
+        {
+            public static DataTable dt = new DataTable();
+
+        }
+
+        public static class CSVTemp
+        {
+            public static DataTable dt = new DataTable();
+
         }
         #endregion
 
@@ -121,6 +171,52 @@ namespace RFMonitor
             RunningFootage = 0;
 
             SaveData();
+        }
+
+        private static OpenFileDialog openFileDialog1;
+
+        public static void ReadCSV()
+        {
+                        
+            string fileName;
+            string filePath;
+
+            openFileDialog1 = new OpenFileDialog();           
+          
+
+            if( openFileDialog1.ShowDialog() == DialogResult.OK )
+            {
+                fileName = openFileDialog1.FileName;
+                filePath = System.IO.Path.GetDirectoryName(openFileDialog1.FileName);
+
+                Debug.WriteLine(fileName);
+                Debug.WriteLine(filePath);
+            }
+            else 
+            {
+                fileName = null;
+                filePath = null;                
+            }
+
+            try 
+            {
+                using (var reader = new StreamReader(fileName))
+
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    using (var dr = new CsvDataReader(csv))
+                    {
+                        CSVTemp.dt.Load(dr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error opening CSV file.");
+                Debug.WriteLine(e);
+            }
+
+            
         }
         #endregion
     }

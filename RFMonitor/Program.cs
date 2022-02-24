@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Data;
+
 
 namespace RFMonitor
 {
@@ -30,6 +32,6 @@ namespace RFMonitor
             configuration.Save(ConfigurationSaveMode.Full, true);
             ConfigurationManager.RefreshSection("appSettings");
         }
-    }
-
+    }   
+    
 }

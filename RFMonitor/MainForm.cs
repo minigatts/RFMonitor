@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Timers;
 using System.IO.Ports;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace RFMonitor
 {
@@ -21,7 +22,16 @@ namespace RFMonitor
             // Get a list of available serial port names.
             Variables.Ports = SerialPort.GetPortNames();
 
-            Variables.ReadData();
+            try
+            {
+                Variables.ReadData();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                Debug.WriteLine("Error when reading status.txt.");
+            }
+            
 
             InitializeComponent();
 
@@ -30,6 +40,9 @@ namespace RFMonitor
             tbDepthColumn.Text = ConfigurationManager.AppSettings["DepthCol"];
             tbDepthGain.Text = ConfigurationManager.AppSettings["DepthGain"];
             tbDepthOffset.Text = ConfigurationManager.AppSettings["DepthOffset"];
+            tbWeightColumn.Text = ConfigurationManager.AppSettings["WeightCol"];
+            tbWeightGain.Text = ConfigurationManager.AppSettings["WeightGain"];
+            tbWeightOffset.Text = ConfigurationManager.AppSettings["WeightOffset"];
 
         }
 
@@ -49,6 +62,9 @@ namespace RFMonitor
             btnNewJob.Enabled = false;
             tbDepthGain.Enabled = false;
             tbDepthOffset.Enabled = false;
+            tbWeightColumn.Enabled = false;
+            tbWeightGain.Enabled = false;
+            tbWeightOffset.Enabled = false;
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
@@ -61,6 +77,9 @@ namespace RFMonitor
             btnNewJob.Enabled = true;
             tbDepthGain.Enabled = true;
             tbDepthOffset.Enabled = true;
+            tbWeightColumn.Enabled = true;
+            tbWeightGain.Enabled = true;
+            tbWeightOffset.Enabled = true;
         }
 
         private void InitializeSerialPort()
@@ -88,7 +107,7 @@ namespace RFMonitor
         {
             try
             {
-                Variables.DepthGain = Convert.ToSingle(this.tbDepthColumn.Text);
+                Variables.DepthCol = Convert.ToInt16(this.tbDepthColumn.Text);
                 Program.SetSetting("DepthCol", this.tbDepthColumn.Text);
             }
             catch (FormatException)
@@ -98,14 +117,8 @@ namespace RFMonitor
             }
             
         }
-
-        private void btnNewJob_Click(object sender, EventArgs e)
-        {
-            Variables.ClearData();
-        }
-
         private void tbDepthGain_TextChanged(object sender, EventArgs e)
-        {            
+        {
             try
             {
                 Variables.DepthGain = Convert.ToSingle(this.tbDepthGain.Text);
@@ -125,11 +138,70 @@ namespace RFMonitor
                 Variables.DepthOffset = Convert.ToSingle(this.tbDepthOffset.Text);
                 Program.SetSetting("DepthOffset", this.tbDepthOffset.Text);
             }
-            catch ( FormatException)
+            catch (FormatException)
             {
                 // User input invalid.
                 this.tbDepthOffset.Text = null;
             }
         }
+
+        private void tbWeightColumn_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Variables.WeightCol = Convert.ToInt16(this.tbWeightColumn.Text);
+                Program.SetSetting("WeightCol", this.tbWeightColumn.Text);
+            }
+            catch (FormatException)
+            {
+                // User input invalid.
+                this.tbWeightColumn.Text = null;
+            }
+
+        }
+
+        private void tbWeightGain_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Variables.WeightGain = Convert.ToSingle(this.tbWeightGain.Text);
+                Program.SetSetting("WeightGain", this.tbWeightGain.Text);
+            }
+            catch (FormatException)
+            {
+                // User input invalid.
+                this.tbWeightGain.Text = null;
+            }
+        }
+
+        private void tbWeightOffset_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Variables.WeightOffset = Convert.ToSingle(this.tbWeightOffset.Text);
+                Program.SetSetting("WeightOffset", this.tbWeightOffset.Text);
+            }
+            catch (FormatException)
+            {
+                // User input invalid.
+                this.tbWeightOffset.Text = null;
+            }
+        }
+
+
+        private void btnNewJob_Click(object sender, EventArgs e)
+        {
+            Variables.ClearData();
+        }
+
+  
+
+        private void btnForceMon_Click(object sender, EventArgs e)
+        {
+            ForceMon viewer = new ForceMon();
+            viewer.Show();           
+
+
+        }     
     }
 }
