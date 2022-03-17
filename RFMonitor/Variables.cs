@@ -133,14 +133,22 @@ namespace RFMonitor
                 _runningFootage.ToString()
             };
 
-            using( var writer = File.CreateText("status.txt"))
+            try
             {
-                foreach (string item in status)
+                using (var writer = File.CreateText("status.txt"))
                 {
-                    writer.WriteLine(item);                    
-                }
+                    foreach (string item in status)
+                    {
+                        writer.WriteLine(item);
+                    }
 
-                writer.Dispose();
+                    writer.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Can't write to status file.");
+                Debug.WriteLine(e);
             }
         }
 

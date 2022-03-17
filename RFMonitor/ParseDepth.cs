@@ -49,8 +49,19 @@ namespace RFMonitor
 
                 try 
                 {
+                    
+
+
                     Debug.WriteLine("\nDepth :" + depthStr + "Weight : " + weightStr);
                     DataRow _forces = Variables.ForcesData.dt.NewRow();
+
+                    // This is unnecessary, but avoids an error message which appears when the Force Monitor has not been opened yet..
+                    if (!_forces.Table.Columns.Contains("Depth") & !_forces.Table.Columns.Contains("Weight"))
+                    {
+                        _forces.Table.Columns.Add("Depth");
+                        _forces.Table.Columns.Add("Weight");
+                    }                    
+
                     _forces["Depth"] = depth;
                     _forces["Weight"] = weight;
                     Variables.ForcesData.dt.Rows.Add(_forces);                    
