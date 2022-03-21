@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
 
 namespace RFMonitor
 {
@@ -24,21 +25,37 @@ namespace RFMonitor
         int NextPointIndex = 0;
 
         Timer timer = new Timer();
+        Timer AutoSave = new Timer();
 
         public ForceMon()
         {
             InitializeComponent();
 
-            try
+            // Load forces data if it exists.
+            if (File.Exists("forcesdata.csv"))
             {
-                Variables.ForcesData.dt.Columns.Add("Depth");
-                Variables.ForcesData.dt.Columns.Add("Weight");
+                try
+                {
+                    Variables.ForcesData.dt.ReadFromCsvFile("forcesdata.csv");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Could not read from forcesdata.csv");
+                    Debug.WriteLine(ex);
+                }
             }
-            catch
+            else
             {
-                Debug.WriteLine("Column already exists in table.");
+                try
+                {
+                    Variables.ForcesData.dt.Columns.Add("Depth");
+                    Variables.ForcesData.dt.Columns.Add("Weight");
+                }
+                catch
+                {
+                    Debug.WriteLine("Column already exists in table.");
+                }
             }
-
 
             bs.DataSource = Variables.ForcesData.dt;
 
@@ -49,29 +66,55 @@ namespace RFMonitor
             ForcesPlot.Plot.XAxis.Label("Weight");
             ForcesPlot.Plot.YAxis.Label("Depth");
 
+            AutoSave.Interval = 60000;
+            AutoSave.Tick += new EventHandler(timer_Tick);
+            AutoSave.Start();
+
             timer.Interval = 5000;
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
 
         }
+
+        void autosave_Tick(object sender, EventArgs e)
+        {
+            try 
+            { 
+                Variables.ForcesData.dt.WriteToCsvFile("forcesdata.csv");
+                Debug.WriteLine("Forces data backed up to csv.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Could not save forces data to csv.");
+                Debug.WriteLine(ex);
+            }
+
+        }
+
         void timer_Tick(object sender, EventArgs e)
         {
-            dataGridViewForces.Refresh();            
+            dataGridViewForces.Refresh();
+
+            int numrows = Variables.ForcesData.dt.Rows.Count;
 
             try 
             {
-                double[] tempDepth = new double[Variables.ForcesData.dt.Rows.Count];
-                double[] tempWeight = new double[Variables.ForcesData.dt.Rows.Count];                
-                
-
-                // Classic version :-)
-                for (int a = 0; a < Variables.ForcesData.dt.Rows.Count; a++)
+                double[] tempDepth = new double[numrows];                
+                double[] tempWeight = new double[numrows];                
+                                
+                for (int a = 0; a < numrows; a++)
                 {
                     depthsArray[a] = -float.Parse(Variables.ForcesData.dt.Rows[a]["Depth"].ToString());
                     weightsArray[a] = float.Parse(Variables.ForcesData.dt.Rows[a]["Weight"].ToString());      
                 }               
 
-                ScatterPlot.MaxRenderIndex = NextPointIndex;
+                if(numrows > (NextPointIndex + 1))
+                {
+                    Debug.WriteLine("Updated render index from " + NextPointIndex + " to " + numrows);
+                    NextPointIndex = numrows;                    
+                }
+                
+                ScatterPlot.MaxRenderIndex = NextPointIndex;                
                 NextPointIndex += 5;
                            
                 ForcesPlot.Render();
@@ -80,6 +123,16 @@ namespace RFMonitor
             catch
             {
                 Debug.WriteLine("Could not copy data to chart DataTable.");
+            }
+
+            try
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Could not save datatable to CSV.");
+                Debug.WriteLine(ex);
             }
         }
 

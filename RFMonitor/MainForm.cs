@@ -4,6 +4,7 @@ using System.Timers;
 using System.IO.Ports;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 
 namespace RFMonitor
 {
@@ -191,7 +192,18 @@ namespace RFMonitor
 
         private void btnNewJob_Click(object sender, EventArgs e)
         {
-            Variables.ClearData();
+            try
+            {
+                Variables.ClearData();
+                File.Delete("forcesdata.csv");
+                Variables.ForcesData.dt.Clear();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Could not clear data.");
+                Debug.WriteLine(ex);
+            }
+            
         }
 
   

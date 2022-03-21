@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace RFMonitor
 {
-    class Variables
+    public static class Variables
     {
         #region Data Variables
         static string[] _ports;
@@ -226,6 +226,27 @@ namespace RFMonitor
 
             
         }
+
+        public static void ExportDataTable(this CsvWriter writer, DataTable dt)
+        {
+            // Write the header
+            foreach (DataColumn column in dt.Columns)
+            {
+                writer.WriteField(column.ColumnName);
+            }
+            writer.NextRecord();
+
+            // Write the rows
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (DataColumn column in dt.Columns)
+                {
+                    writer.WriteField(row[column]);
+                }
+                writer.NextRecord();
+            }
+        }
+        
         #endregion
     }
 }
