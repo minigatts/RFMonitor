@@ -80,8 +80,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SerialPortOutput.cs" />
     <Compile Include="Variables.cs" />
-    <Compile Include="ParseDepth.cs" />
+    <Compile Include="ParseChannels.cs" />
     <Compile Include="SerialPortMonitor.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

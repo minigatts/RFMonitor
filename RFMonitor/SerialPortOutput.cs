@@ -4,34 +4,32 @@ using System.Threading;
 using System.IO.Ports;
 using System.Configuration;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace CuddCal
 {
-    public class SerialPortMonitor
+    public class SerialPortOutput
     {
         static bool _continue;
-        static SerialPort _readPort;
-        Thread readThread;
+        static SerialPort _writePort;        
+        Thread writeThread;
+        
 
-        public SerialPortMonitor()
-        {
-            readThread = new Thread(ReadCom);
-            string selectedCom = ConfigurationManager.AppSettings["SelectedCom"];
+        public SerialPortOutput()
+        {            
+            writeThread = new Thread(WriteCom);
+            string selectedCom = ConfigurationManager.AppSettings["SelectedComOut"];
 
-            _readPort = new SerialPort(selectedCom, 19200, Parity.None, 8, StopBits.One);
+            _writePort = new SerialPort(selectedCom, 19200, Parity.None, 8, StopBits.One);
 
             Debug.WriteLine("Opening port...");
             try
             {
-                _readPort.Open();
+                _writePort.Open();
 
-                _continue = true;
+                _continue = true;                
 
-                // Clear buffer before starting.
-                // Rolligon box doesn't provide timestamp with data, so we only want the most recent transmission.
-                _readPort.DiscardInBuffer();
-
-                readThread.Start();
+                writeThread.Start();
             }
             catch (System.UnauthorizedAccessException)
             {
@@ -39,14 +37,26 @@ namespace CuddCal
             }                    
         }
 
-        public void ReadCom()
+        public void WriteCom()
         {
+            
             while (_continue)
             {
+                
+                Thread.Sleep(1000);
+
                 try
                 {
-                    string message = _readPort.ReadLine();
-                    ParseChannels.GetChannelValues(message);                    
+                    string message = "";
+
+                    for(int i = 0; i < 15; i++)
+                    {
+                        message += (Variables.CalibrationValues[i, 2]).ToString() + ",";
+                    }
+
+                    message += (Variables.CalibrationValues[15, 2]).ToString() + "\r\n";
+
+                    _writePort.Write(message);
                 }
                 catch (TimeoutException) 
                 {
@@ -66,10 +76,10 @@ namespace CuddCal
             {
                 _continue = false;
 
-                // Wait for monitor thread to finish.
-                readThread.Join();
+                // Wait for output thread to finish.
+                writeThread.Join();
 
-                _readPort.Close();
+                _writePort.Close();
             }
             catch (Exception ex)
             {

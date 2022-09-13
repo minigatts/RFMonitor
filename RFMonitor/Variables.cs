@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace RFMonitor
+namespace CuddCal
 {
     class Variables
     {
@@ -15,8 +15,85 @@ namespace RFMonitor
         static float _maxDepth;
         static float _lastGoodDepth;
         static float _runningFootage;
-        static float _depthGain;
-        static float _depthOffset;
+
+        static string _infofeed;
+
+        public static string InfoFeed
+        {
+            get { return _infofeed; }
+            set { _infofeed = value; }
+        }
+
+        // Channel value variables
+        static float _circulating;
+        static float _wellhead;
+        static float _stripper1;
+        static float _stripper2;
+        static float _upperSkate;
+        static float _middleSkate;
+        static float _lowerSkate;
+        static float _chainTension;
+        static float _weight;
+        static float _spare1;
+        static float _speed;
+        static float _flowRate;
+        static float _auxFlowRate;
+        static float _injector;
+        static float _spare2;
+        static float _depth;
+
+        static Dictionary<int, string> _channels = new Dictionary<int, string>()
+        {
+            {0, "Circulating" },
+            {1, "Wellhead"},
+            {2, "Stripper1"},
+            {3, "Stripper2"},
+            {4, "UpperSkate"},
+            {5, "MiddleSkate"},
+            {6, "LowerSkate"},
+            {7, "ChainTension"},
+            {8, "Weight"},
+            {9, "Spare1"},
+            {10, "Speed"},
+            {11, "FlowRate"},
+            {12, "AuxFlowRate"},
+            {13, "Injector"},
+            {14, "Spare2"},
+            {15, "Depth"}
+        };
+
+        public static Dictionary<int, string> Channels
+        {
+            get { return _channels; }
+            set { _channels = value; }
+        }
+
+        // Array to store calibration values and calibrated result.
+        static float[,] _calibrationvalues = new float[16, 3] 
+        {   
+            { 0, 0, 0 },             
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }, 
+            { 0, 0, 0 } 
+        };
+
+        public static float [,] CalibrationValues 
+        {
+            get { return _calibrationvalues; }
+            set { _calibrationvalues = value; }
+        }        
 
         public static DateTime CurrentTime
         {
@@ -58,17 +135,89 @@ namespace RFMonitor
             set { _ports = value; }
         }
 
-        public static float DepthGain
+        #region Channel Accessors
+        public static float Circulating
         {
-            get { return _depthGain; }
-            set { _depthGain = value; }
+            get { return _circulating; }
+            set { _circulating = value; }
+        }
+        public static float Wellhead
+        {
+            get { return _wellhead; }
+            set { _wellhead = value; }
+        }
+        public static float Stripper1
+        {
+            get { return _stripper1; }
+            set { _stripper1 = value; }
+        }
+        public static float Stripper2
+        {
+            get { return _stripper2; }
+            set { _stripper2 = value; }
+        }
+        public static float UpperSkate
+        {
+            get { return _upperSkate; }
+            set { _upperSkate = value; }
+        }
+        public static float MiddleSkate
+        {
+            get { return _middleSkate; }
+            set { _middleSkate = value; }
+        }
+        public static float LowerSkate
+        {
+            get { return _lowerSkate; }
+            set { _lowerSkate = value; }
+        }
+        public static float ChainTension
+        {
+            get { return _chainTension; }
+            set { _chainTension = value; }
+        }
+        public static float Weight
+        {
+            get { return _weight; }
+            set { _weight = value; }
+        }
+        public static float Spare1
+        {
+            get { return _spare1; }
+            set { _spare1 = value; }
         }
 
-        public static float DepthOffset
+        public static float Speed
         {
-            get { return _depthOffset; }
-            set { _depthOffset = value; }
+            get { return _speed; }
+            set { _speed = value; }
         }
+        public static float FlowRate
+        {
+            get { return _flowRate; }
+            set { _flowRate = value; }
+        }
+        public static float AuxFlowRate
+        {
+            get { return _auxFlowRate; }
+            set { _auxFlowRate = value; }
+        }
+        public static float Injector
+        {
+            get { return _injector; }
+            set { _injector = value; }
+        }
+        public static float Spare2
+        {
+            get { return _spare2; }
+            set { _spare2 = value; }
+        }
+        public static float Depth
+        {
+            get { return _depth; }
+            set { _depth = value; }
+        }
+        #endregion
         #endregion
 
         #region Save / Load
@@ -76,11 +225,7 @@ namespace RFMonitor
         {
             var status = new List<string>
             {
-                _lastGoodTime.ToString(),
-                _currentDepth.ToString(),
-                _maxDepth.ToString(),
-                _lastGoodDepth.ToString(),
-                _runningFootage.ToString()
+           
             };
 
             using( var writer = File.CreateText("status.txt"))
@@ -99,12 +244,6 @@ namespace RFMonitor
             try 
             { 
                 string[] lines = System.IO.File.ReadAllLines("status.txt");
-
-                LastGoodTime = DateTime.Parse(lines[0]);
-                CurrentDepth = Single.Parse(lines[1]);
-                MaxDepth = Single.Parse(lines[2]);
-                LastGoodDepth = Single.Parse(lines[3]);
-                RunningFootage = Single.Parse(lines[4]);
             }
             catch(FileNotFoundException)
             {
@@ -112,16 +251,7 @@ namespace RFMonitor
             }
         }
 
-        public static void ClearData()
-        {
-            LastGoodTime = DateTime.Now;
-            CurrentDepth = 0;
-            MaxDepth = 0;
-            LastGoodDepth = 0;
-            RunningFootage = 0;
 
-            SaveData();
-        }
         #endregion
     }
 }

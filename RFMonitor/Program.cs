@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Configuration;
 
-namespace RFMonitor
+namespace CuddCal
 {
     static class Program
     {
@@ -14,7 +14,7 @@ namespace RFMonitor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new RFMonitor());
+            Application.Run(new CuddCal());
         }
 
         /// <summary>
