@@ -29,7 +29,11 @@ namespace RFMonitor
         static string weightStr;
 
         public static void GetDepth ( string message )
-        {            
+        {
+            // Capture changes to Column Value if applied after program start.
+            depthCol = Convert.ToInt16(Variables.DepthCol);
+            weightCol = Convert.ToInt16(Variables.WeightCol);            
+
             // Pull current depth from serial stream.
             string[] elements = message.Split(new string[] { "," , "\0\r"}, StringSplitOptions.None);         
 
@@ -78,6 +82,7 @@ namespace RFMonitor
 
                 // Get time since last sample
                 timeDelta = currentTime - Variables.LastGoodTime;
+                Debug.WriteLine("Depth Column : " + depthCol + "  Weight Column : " + weightCol);
                 Debug.WriteLine("Current Time : " + currentTime + "  Last Time : " + Variables.LastGoodTime);
                 Debug.WriteLine("Time Delta : " + timeDelta);
 
